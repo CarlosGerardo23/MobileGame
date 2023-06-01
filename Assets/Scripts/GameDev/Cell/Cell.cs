@@ -6,15 +6,22 @@ namespace GameDev.Behaviour2D.Puzzle
 {
     public class Cell : MonoBehaviour
     {
-        private BoardManager _board;
+        private BoardController _board;
         private int _positionX;
         private int _positionY;
 
-        public virtual void Init(BoardManager board, int positionX, int positionY)
+        public Vector2 CellPosition=> new Vector2(_positionX, _positionY);
+        public virtual void Init(BoardController board, int positionX, int positionY)
         {
             _positionX= positionX;
             _positionY= positionY;
             _board= board;
+        }
+
+        public void UpdateCells(int newPosX, int newPosY)
+        {
+            _positionX= newPosX;
+            _positionY= newPosY;
         }
     }
 

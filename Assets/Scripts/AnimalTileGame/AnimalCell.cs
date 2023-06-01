@@ -10,7 +10,7 @@ public class AnimalCell : Cell
     [SerializeField] private AnimalType _type;
     private SpriteRenderer _spriteRenderere;
 
-    public override void Init(BoardManager board, int positionX, int positionY)
+    public override void Init(BoardController board, int positionX, int positionY)
     {
         base.Init(board, positionX, positionY);
         _spriteRenderere= GetComponent<SpriteRenderer>();

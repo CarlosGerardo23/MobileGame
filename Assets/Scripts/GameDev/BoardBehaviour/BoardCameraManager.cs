@@ -8,7 +8,7 @@ namespace GameDev.Behaviour2D.Puzzle.Camera
 {
     public class BoardCameraManager : MonoBehaviour
     {
-        [SerializeField] private BoardManager _boardManager;
+        [SerializeField] private BoardController _BoardController;
         [SerializeField] private float _offsetX;
         [SerializeField] private float _offsetY;
         [SerializeField] private float _offsetOrthographic;
@@ -30,15 +30,15 @@ namespace GameDev.Behaviour2D.Puzzle.Camera
 
         private void SetCameraPosition()
         {
-            float newPosX = (_boardManager.BoardDimension.x / 2) - _offsetX;
-            float newPosY = (_boardManager.BoardDimension.y / 2) - _offsetY + _offsetVerticalCamera;
+            float newPosX = (_BoardController.BoardDimension.x / 2) - _offsetX;
+            float newPosY = (_BoardController.BoardDimension.y / 2) - _offsetY + _offsetVerticalCamera;
             cameraReference.transform.position = new Vector3(newPosX, newPosY, -10);
         }
 
         private void SetOrthographicValue()
         {
-            float horizontal = _boardManager.BoardDimension.x + _offsetOrthographic;
-            float vertical = (_boardManager.BoardDimension.y / 2) + _offsetOrthographic;
+            float horizontal = _BoardController.BoardDimension.x + _offsetOrthographic;
+            float vertical = (_BoardController.BoardDimension.y / 2) + _offsetOrthographic;
             cameraReference.orthographicSize = horizontal > vertical ? horizontal + _zoomCamera : vertical;
         }
 
