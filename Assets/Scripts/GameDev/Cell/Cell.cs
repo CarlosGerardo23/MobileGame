@@ -6,7 +6,7 @@ namespace GameDev.Behaviour2D.Puzzle
 {
     public class Cell : MonoBehaviour
     {
-        private BoardController _board;
+        protected BoardController board;
         private int _positionX;
         private int _positionY;
 
@@ -15,7 +15,7 @@ namespace GameDev.Behaviour2D.Puzzle
         {
             _positionX= positionX;
             _positionY= positionY;
-            _board= board;
+            this.board= board;
         }
 
         public void UpdateCells(int newPosX, int newPosY)

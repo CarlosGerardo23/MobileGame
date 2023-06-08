@@ -38,6 +38,32 @@ namespace GameDev.Behaviour2D.Puzzle.Board
             _cellsArray[(int)firstIndex.x, (int)firstIndex.y] = secondCell;
             _cellsArray[(int)secondIndex.x, (int)secondIndex.y] = firstCell;
         }
+
+        public bool TryGetCellByPosition(Vector2 position, out Cell result)
+        {
+            result = null;
+            if(position.x>=0&&position.x<_gridWidth&&position.y>=0&&position.y<_gridHeight)
+            {
+                result = _cellsArray[(int)position.x, (int)position.y];
+               
+                return result!=null;
+            }
+            return false;
+        }
+
+        public void DestroyCellByPosition(Vector2 position)
+        {
+            int width = (int)position.x;
+            int height = (int)position.y;
+            Cell cell = _cellsArray[width,height];
+            if(cell != null)
+            {
+                _cellsArray[width, height] = null;
+                Destroy(cell.gameObject);
+            }
+           
+            
+        }
     }
 }
 

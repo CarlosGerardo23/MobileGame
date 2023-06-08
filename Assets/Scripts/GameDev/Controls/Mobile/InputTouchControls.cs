@@ -31,14 +31,11 @@ namespace GameDev.Behaviour2D.Controls
         }
         private void OnFingerUp(Finger finger)
         {
-
             if (OnEndedTouchPosition != null)
             {
                 OnEndedTouchPosition(finger.currentTouch.screenPosition);
                 Debug.Log($"{finger.currentTouch.screenPosition}");
             }
-
-
 
         }
 
