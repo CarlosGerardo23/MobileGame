@@ -18,25 +18,32 @@ public class AnimalCellMatchController : MonoBehaviour
     [Header("Events")]
     [SerializeField] private UnityEvent _onMatchNotFoundSubject;
 
-    private bool _checkingCells;
-
+    private List<Cell> _cellsToMatch = new List<Cell>();
     private AnimalCell _initialCell;
 
     private void OnEnable()
     {
-        _getMatchesObserver.Subscribe(TryGetMatches);
+        _getMatchesObserver.Subscribe(GetCellsToMatch);
     }
     private void OnDisable()
     {
-        _getMatchesObserver.Unsubscribe(TryGetMatches);
+        _getMatchesObserver.Unsubscribe(GetCellsToMatch);
 
     }
-    private void TryGetMatches(Cell reference)
+    private void GetCellsToMatch(Cell reference)
     {
-        if (_checkingCells) return;
-        _checkingCells = true;
-        if (GetMatchesByCell(reference.CellPosition, out List<Vector2> resultCells))
+        if (_cellsToMatch.Count >= 2)
+            _cellsToMatch.Clear();
+        _cellsToMatch.Add(reference);
+        if (_cellsToMatch.Count == 2) TryGetMatches();
+    }
+    private void TryGetMatches()
+    {
+        bool cellsToMatch = false;
+        List<Vector2> resultCells = new List<Vector2>();
+        if (GetMatchesByCell(_cellsToMatch[0].CellPosition, out resultCells))
         {
+            cellsToMatch = true;
             for (int i = 0; i < resultCells.Count; i++)
             {
                 _boardController.DestroyCellByPosition(resultCells[i]);
@@ -44,13 +51,22 @@ public class AnimalCellMatchController : MonoBehaviour
 
             resultCells.Sort((a, b) => a.y.CompareTo(b.y));
             _boardMovementController.CollapseBoard(GetUniquecolumns(resultCells));
-            
+
         }
-        else
+        if (GetMatchesByCell(_cellsToMatch[1].CellPosition, out resultCells))
         {
-            _onMatchNotFoundSubject?.Invoke();
+            cellsToMatch = true;
+            for (int i = 0; i < resultCells.Count; i++)
+            {
+                _boardController.DestroyCellByPosition(resultCells[i]);
+            }
+
+            resultCells.Sort((a, b) => a.y.CompareTo(b.y));
+            _boardMovementController.CollapseBoard(GetUniquecolumns(resultCells));
         }
-        _checkingCells = false;
+        if(!cellsToMatch) _onMatchNotFoundSubject?.Invoke();
+        
+
     }
     private bool GetMatchesByCell(Vector2 initialPosition, out List<Vector2> resultCells)
     {
@@ -77,12 +93,12 @@ public class AnimalCellMatchController : MonoBehaviour
         List<Vector2> neighbors = new List<Vector2>();
         neighbors = GetNeighborsByDirection(Vector2.right).Union(GetNeighborsByDirection(Vector2.left)).ToList();
 
-        if (neighbors.Count >= _minNumMatches-1)
+        if (neighbors.Count >= _minNumMatches - 1)
             resultCells = resultCells.Union(neighbors).ToList();
         neighbors.Clear();
         //Vertical Neighbors
         neighbors = GetNeighborsByDirection(Vector2.up).Union(GetNeighborsByDirection(Vector2.down)).ToList();
-        if (neighbors.Count >= _minNumMatches-1)
+        if (neighbors.Count >= _minNumMatches - 1)
             resultCells = resultCells.Union(neighbors).ToList();
 
     }
@@ -105,8 +121,8 @@ public class AnimalCellMatchController : MonoBehaviour
             {
                 if (((AnimalCell)result).GetAnimalType == _initialCell.GetAnimalType)
                     neighbors.Add(result.CellPosition);
-                else  break;
-                
+                else break;
+
             }
             else break;
         }
@@ -121,7 +137,7 @@ public class AnimalCellMatchController : MonoBehaviour
         List<int> xValueList = new List<int>();
         foreach (var vector in reference)
         {
-            if(!xValueList.Contains((int)vector.x))
+            if (!xValueList.Contains((int)vector.x))
             {
                 result.Add(vector);
                 xValueList.Add((int)vector.x);
@@ -129,5 +145,5 @@ public class AnimalCellMatchController : MonoBehaviour
         }
         return result;
     }
-   
+
 }
