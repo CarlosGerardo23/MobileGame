@@ -34,7 +34,7 @@ namespace GameDev.Behaviour2D.Controls
             if (OnEndedTouchPosition != null)
             {
                 OnEndedTouchPosition(finger.currentTouch.screenPosition);
-                Debug.Log($"{finger.currentTouch.screenPosition}");
+//                Debug.Log($"{finger.currentTouch.screenPosition}");
             }
 
         }
@@ -45,7 +45,7 @@ namespace GameDev.Behaviour2D.Controls
             if (OnStartedTouchPosition != null)
             {
                 OnStartedTouchPosition(finger.currentTouch.screenPosition);
-                Debug.Log($"{finger.currentTouch.screenPosition}");
+           //     Debug.Log($"{finger.currentTouch.screenPosition}");
 
             }
 

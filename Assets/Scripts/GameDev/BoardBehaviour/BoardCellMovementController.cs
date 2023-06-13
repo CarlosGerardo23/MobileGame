@@ -1,7 +1,7 @@
 using UnityEngine;
 using GameDev.Behaviour2D.Controls;
 using GameDev.Behaviour2D.Puzzle.Movement;
-
+using System.Collections.Generic;
 namespace GameDev.Behaviour2D.Puzzle.Board
 {
     [RequireComponent(typeof(BoardController))]
@@ -43,10 +43,10 @@ namespace GameDev.Behaviour2D.Puzzle.Board
             RaycastHit2D hit = Physics2D.Raycast(worlPosition, Vector2.zero);
             if (hit.collider != null)
             {
-                Debug.Log("Se tocó el objeto: " + hit.collider.gameObject.name);
+              
                 if (hit.collider.gameObject.TryGetComponent(out Cell cell))
                 {
-                    print($"Current cell {cell.name}");
+                  
                     _startCellIndex = cell.CellPosition;
                 }
             }
@@ -59,10 +59,10 @@ namespace GameDev.Behaviour2D.Puzzle.Board
             RaycastHit2D hit = Physics2D.Raycast(worlPosition, Vector2.zero);
             if (hit.collider != null)
             {
-                Debug.Log("Se tocó el objeto: " + hit.collider.gameObject.name);
+               
                 if (hit.collider.gameObject.TryGetComponent(out Cell cell))
                 {
-                    print($"last cell {cell.name}");
+                   
                     _endCellIndex = cell.CellPosition;
                 }
             }
@@ -130,6 +130,34 @@ namespace GameDev.Behaviour2D.Puzzle.Board
                 _endCellIndex = new Vector2(-1, -1);
             }
 
+        }
+        public void CollapseBoard(List<Vector2> cellsToCollapse)
+        {
+            int positionX;
+            int positionY;
+          
+            for (int i = 0; i < cellsToCollapse.Count; i++)
+            {
+                positionX = (int)cellsToCollapse[i].x;
+                positionY = (int)cellsToCollapse[i].y;
+
+                for (int j = positionY; j < _boardController.BoardHeight; j++)
+                {
+                    if (!_boardController.TryGetCellByPosition(new Vector2(positionX, j), out _))
+                    {
+                        for (int k = j; k < _boardController.BoardHeight; k++)
+                        {
+                            if (_boardController.TryGetCellByPosition(new Vector2(positionX, k), out Cell cell))
+                            {
+                                Debug.Log($"The cell {cell.CellPosition} is going to {new Vector2(positionX, j)}");
+                                _boardController.SwapCells(new Vector2(positionX, j), cell.CellPosition);
+                                cell.GetComponent<CellMovementController>().Move(positionX, j, false);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }

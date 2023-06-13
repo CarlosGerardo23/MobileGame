@@ -271,8 +271,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46373ca034b089e4b9a9fea4d9ccfd03, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _gridWidth: 5
-  _gridHeight: 8
+  _gridWidth: 7
+  _gridHeight: 7
   _cellPrefab: {fileID: 6274163869166449247, guid: fa668ff3fc26bf444af41c235223cba9, type: 3}
 --- !u!114 &139494221
 MonoBehaviour:
@@ -493,35 +493,6 @@ MonoBehaviour:
   m_ShadowIntensity: 0.75
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
-  m_Vertices:
-  - position: {x: 0.9985302, y: 0.9985302, z: 0}
-    color: {r: 0.70710677, g: 0.70710677, b: 0, a: 0}
-    uv: {x: 0, y: 0}
-  - position: {x: 0.9985302, y: 0.9985302, z: 0}
-    color: {r: 0, g: 0, b: 0, a: 1}
-    uv: {x: 0, y: 0}
-  - position: {x: -0.9985302, y: 0.9985302, z: 0}
-    color: {r: -0.70710677, g: 0.70710677, b: 0, a: 0}
-    uv: {x: 0, y: 0}
-  - position: {x: -0.9985302, y: 0.9985302, z: 0}
-    color: {r: 0, g: 0, b: 0, a: 1}
-    uv: {x: 0, y: 0}
-  - position: {x: -0.99853003, y: -0.9985304, z: 0}
-    color: {r: -0.70710665, g: -0.7071069, b: 0, a: 0}
-    uv: {x: 0, y: 0}
-  - position: {x: -0.99853003, y: -0.9985304, z: 0}
-    color: {r: 0, g: 0, b: 0, a: 1}
-    uv: {x: 0, y: 0}
-  - position: {x: 0.99853003, y: -0.9985304, z: 0}
-    color: {r: 0.70710665, g: -0.7071069, b: 0, a: 0}
-    uv: {x: 0, y: 0}
-  - position: {x: 0.99853003, y: -0.9985304, z: 0}
-    color: {r: 0, g: 0, b: 0, a: 1}
-    uv: {x: 0, y: 0}
-  - position: {x: 0, y: 0, z: 0}
-    color: {r: 0, g: 0, b: 0, a: 1}
-    uv: {x: 0, y: 0}
-  m_Triangles: 030001000800020000000100030002000100050003000800040002000300050004000300070005000800060004000500070006000500010007000800000006000700010000000700
   m_LocalBounds:
     m_Center: {x: 0, y: -0.00000011920929, z: 0}
     m_Extent: {x: 0.9985302, y: 0.99853027, z: 0}
@@ -584,6 +555,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _boardController: {fileID: 139494220}
+  _boardMovementController: {fileID: 139494222}
   _minNumMatches: 3
   _getMatchesObserver: {fileID: 11400000, guid: 6d0569d9733d64345a59a9d34380aa64, type: 2}
   _onMatchNotFoundSubject:
@@ -646,8 +618,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46373ca034b089e4b9a9fea4d9ccfd03, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _gridWidth: 5
-  _gridHeight: 8
+  _gridWidth: 7
+  _gridHeight: 7
   _cellPrefab: {fileID: 7830848176026718133, guid: 2e5e324d37b29f843b6bb98bcce67035, type: 3}
 --- !u!4 &1161482123
 Transform:

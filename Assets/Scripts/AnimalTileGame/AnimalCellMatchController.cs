@@ -11,6 +11,7 @@ using UnityEngine.Events;
 public class AnimalCellMatchController : MonoBehaviour
 {
     [SerializeField] BoardController _boardController;
+    [SerializeField] BoardCellMovementController _boardMovementController;
     [SerializeField] private int _minNumMatches;
     [Header("Events Observers")]
     [SerializeField] private CellEventChannel _getMatchesObserver;
@@ -40,6 +41,10 @@ public class AnimalCellMatchController : MonoBehaviour
             {
                 _boardController.DestroyCellByPosition(resultCells[i]);
             }
+
+            resultCells.Sort((a, b) => a.y.CompareTo(b.y));
+            _boardMovementController.CollapseBoard(GetUniquecolumns(resultCells));
+            
         }
         else
         {
@@ -108,4 +113,21 @@ public class AnimalCellMatchController : MonoBehaviour
 
         return neighbors;
     }
+
+    private List<Vector2> GetUniquecolumns(List<Vector2> reference)
+    {
+        List<Vector2> result = new List<Vector2>();
+
+        List<int> xValueList = new List<int>();
+        foreach (var vector in reference)
+        {
+            if(!xValueList.Contains((int)vector.x))
+            {
+                result.Add(vector);
+                xValueList.Add((int)vector.x);
+            }
+        }
+        return result;
+    }
+   
 }
