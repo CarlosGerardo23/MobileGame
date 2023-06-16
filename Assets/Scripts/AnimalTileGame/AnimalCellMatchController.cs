@@ -41,6 +41,8 @@ public class AnimalCellMatchController : MonoBehaviour
     {
         bool cellsToMatch = false;
         List<Vector2> resultCells = new List<Vector2>();
+        List<Vector2> collapsedCells1 = new List<Vector2>();
+        List<Vector2> collapsedCells2 = new List<Vector2>();
         if (GetMatchesByCell(_cellsToMatch[0].CellPosition, out resultCells))
         {
             cellsToMatch = true;
@@ -50,9 +52,10 @@ public class AnimalCellMatchController : MonoBehaviour
             }
 
             resultCells.Sort((a, b) => a.y.CompareTo(b.y));
-            _boardMovementController.CollapseBoard(GetUniquecolumns(resultCells));
+            _boardMovementController.CollapseBoard(GetUniquecolumns(resultCells), out collapsedCells1);
 
         }
+        resultCells= new List<Vector2>();
         if (GetMatchesByCell(_cellsToMatch[1].CellPosition, out resultCells))
         {
             cellsToMatch = true;
@@ -62,12 +65,41 @@ public class AnimalCellMatchController : MonoBehaviour
             }
 
             resultCells.Sort((a, b) => a.y.CompareTo(b.y));
-            _boardMovementController.CollapseBoard(GetUniquecolumns(resultCells));
+            _boardMovementController.CollapseBoard(GetUniquecolumns(resultCells), out collapsedCells2);
         }
-        if(!cellsToMatch) _onMatchNotFoundSubject?.Invoke();
-        
+        if (!cellsToMatch) _onMatchNotFoundSubject?.Invoke();
+        else
+        {
+            collapsedCells1 = collapsedCells1.Union(collapsedCells2).ToList();
+            StartCoroutine(ComboPices(collapsedCells1));
+        }
+
 
     }
+
+    private IEnumerator ComboPices(List<Vector2> cellsPosition)
+    {
+        List<Vector2> cellsCombos = new List<Vector2>();
+        yield return new WaitForSeconds(1);
+        foreach (var cellPosition in cellsPosition)
+        {
+            if (GetMatchesByCell(cellPosition, out List<Vector2> cellsMatches))
+            {
+                cellsCombos = cellsCombos.Union(cellsMatches).ToList();
+                for (int i = 0; i < cellsMatches.Count; i++)
+                {
+                    _boardController.DestroyCellByPosition(cellsMatches[i]);
+                }
+            }
+        }
+        if (cellsCombos.Count > 0)
+        {
+            cellsCombos.Sort((a, b) => a.y.CompareTo(b.y));
+            _boardMovementController.CollapseBoard(GetUniquecolumns(cellsCombos), out List<Vector2> newCellsToCollapse);
+            yield return ComboPices(newCellsToCollapse);
+        }
+    }
+
     private bool GetMatchesByCell(Vector2 initialPosition, out List<Vector2> resultCells)
     {
         resultCells = new List<Vector2>();

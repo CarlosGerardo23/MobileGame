@@ -271,8 +271,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46373ca034b089e4b9a9fea4d9ccfd03, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _gridWidth: 7
-  _gridHeight: 7
+  _gridWidth: 11
+  _gridHeight: 15
   _cellPrefab: {fileID: 6274163869166449247, guid: fa668ff3fc26bf444af41c235223cba9, type: 3}
 --- !u!114 &139494221
 MonoBehaviour:
@@ -290,7 +290,7 @@ MonoBehaviour:
   _offsetX: 0.5
   _offsetY: 0
   _offsetOrthographic: 0
-  _zoomCamera: 0.5
+  _zoomCamera: 2
   _offsetVerticalCamera: 0
 --- !u!114 &139494222
 MonoBehaviour:
@@ -618,8 +618,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46373ca034b089e4b9a9fea4d9ccfd03, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _gridWidth: 7
-  _gridHeight: 7
+  _gridWidth: 11
+  _gridHeight: 15
   _cellPrefab: {fileID: 7830848176026718133, guid: 2e5e324d37b29f843b6bb98bcce67035, type: 3}
 --- !u!4 &1161482123
 Transform:

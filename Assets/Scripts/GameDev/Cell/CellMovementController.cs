@@ -19,36 +19,34 @@ namespace GameDev.Behaviour2D.Puzzle.Movement
         }
         public void Move(int destX, int destY, bool moveFinishEvent)
         {
-            print($"My position is {transform.localPosition}, my next position is {new Vector3(destX,destY,0)}");
+            print($"My position is {transform.localPosition}, my next position is {new Vector3(destX, destY, 0)}");
+            _cell.UpdateCells(destX, destY);
             transform.DOMove(new Vector3(destX, destY, 0), _movementSpeed).SetEase(Ease.InOutCubic).onComplete =
                 () =>
                 {
-                    _cell.UpdateCells(destX, destY);
+                    if (moveFinishEvent)
+                        OnMoveFinish();
                 };
-            if(moveFinishEvent)
-            StartCoroutine(OnMoveFinish());
         }
         public void Move(Vector3 position, bool moveFinishEvent)
         {
             print($"My position is {transform.localPosition}, my next position is {position}");
-
+            _cell.UpdateCells((int)position.x, (int)position.y);
             transform.DOMove(position, _movementSpeed).SetEase(Ease.InOutCubic).onComplete =
                 () =>
                 {
-                    _cell.UpdateCells((int)position.x, (int)position.y);
+                    if (moveFinishEvent)
+                        OnMoveFinish();
                 };
-            if(moveFinishEvent)
-            StartCoroutine(OnMoveFinish());
         }
-        private IEnumerator OnMoveFinish()
+        private void OnMoveFinish()
         {
-            yield return new WaitForSeconds(_movementSpeed);
             _onFinishMovingSubject.Raise(_cell);
         }
         [ContextMenu("Test move")]
         public void MoveTest()
         {
-            Move(0, 0,false);
+            Move(0, 0, false);
         }
     }
 }

@@ -131,8 +131,9 @@ namespace GameDev.Behaviour2D.Puzzle.Board
             }
 
         }
-        public void CollapseBoard(List<Vector2> cellsToCollapse)
+        public void CollapseBoard(List<Vector2> cellsToCollapse, out List<Vector2> cellsCollpasedList) 
         {
+            cellsCollpasedList = new List<Vector2>();
             int positionX;
             int positionY;
           
@@ -152,6 +153,7 @@ namespace GameDev.Behaviour2D.Puzzle.Board
                                 Debug.Log($"The cell {cell.CellPosition} is going to {new Vector2(positionX, j)}");
                                 _boardController.SwapCells(new Vector2(positionX, j), cell.CellPosition);
                                 cell.GetComponent<CellMovementController>().Move(positionX, j, false);
+                                cellsCollpasedList.Add(new Vector2(positionX,j));
                                 break;
                             }
                         }

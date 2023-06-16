@@ -98,7 +98,7 @@ public class AnimalCell : Cell
         List<AnimalType> result = new List<AnimalType>();
         AnimalType lastType = AnimalType.SNAKE;
         int lastIndex = Convert.ToInt32(lastType);
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < lastIndex; i++)
         {
             AnimalType myEnum = (AnimalType)Enum.Parse(typeof(AnimalType), i.ToString());
             if (myEnum != AnimalType.EMPTY)
