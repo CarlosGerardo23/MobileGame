@@ -13,6 +13,7 @@ public class AnimalCellMatchController : MonoBehaviour
     [SerializeField] BoardController _boardController;
     [SerializeField] BoardCellMovementController _boardMovementController;
     [SerializeField] private int _minNumMatches;
+    [SerializeField] private float _comboTime;
     [Header("Events Observers")]
     [SerializeField] private CellEventChannel _getMatchesObserver;
     [Header("Events")]
@@ -88,7 +89,7 @@ public class AnimalCellMatchController : MonoBehaviour
     {
         List<Vector2> cellsCombos = new List<Vector2>();
         List<Vector2> cellsCollapsed = new List<Vector2>();
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(_comboTime);
         foreach (var cellPosition in cellsPosition)
         {
             if (GetMatchesByCell(cellPosition, out List<Vector2> cellsMatches))

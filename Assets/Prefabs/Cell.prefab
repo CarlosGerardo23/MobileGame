@@ -123,6 +123,10 @@ MonoBehaviour:
   - sprite: {fileID: 21300000, guid: 301493f3c51334b62918b5eee04d9431, type: 3}
     animalType: 10
   _type: 0
+  _creationMovementTime: 0.2
+  _maxScaleDestroyed: 2
+  _maxScaleTime: 0.05
+  _timeToDetroy: 0.08
 --- !u!114 &1885619779064711265
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -135,7 +139,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 70cb0d9bf22414f4eae29db1fe4fca08, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _movementSpeed: 0.65
+  _movementSpeed: 0.3
   _onFinishMovingSubject: {fileID: 11400000, guid: 6d0569d9733d64345a59a9d34380aa64, type: 2}
 --- !u!61 &8938272034397316538
 BoxCollider2D:

@@ -23,6 +23,10 @@ namespace GameDev.Behaviour2D.Puzzle
             _positionX= newPosX;
             _positionY= newPosY;
         }
+        public virtual void DestroyCell()
+        {
+            Destroy(gameObject);
+        }
     }
 
 }

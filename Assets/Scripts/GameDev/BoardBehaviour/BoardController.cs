@@ -94,7 +94,7 @@ namespace GameDev.Behaviour2D.Puzzle.Board
             if (cell != null)
             {
                 _cellsArray[width, height] = null;
-                Destroy(cell.gameObject);
+                cell.DestroyCell();
             }
         }
     }

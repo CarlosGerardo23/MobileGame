@@ -4,21 +4,31 @@ using UnityEngine;
 using GameDev.Behaviour2D.Puzzle;
 using GameDev.Behaviour2D.Puzzle.Board;
 using System;
+using DG.Tweening;
 using UnityEditor;
 
 public class AnimalCell : Cell
 {
     [SerializeField] private List<AnimallCellData> cellsData;
     [SerializeField] private AnimalType _type;
+
+    [Header("Animation variables")]
+    [SerializeField] private float _creationMovementTime;
+    [SerializeField] private float _maxScaleDestroyed;
+    [SerializeField] private float _maxScaleTime;
+    [SerializeField] private float _timeToDetroy;
+
     private SpriteRenderer _spriteRenderere;
     List<AnimalType> _posiblesAnimalsType = new List<AnimalType>();
     public AnimalType GetAnimalType => _type;
     public override void Init(BoardController board, int positionX, int positionY)
     {
+        transform.localPosition = new Vector3(positionX, positionY + 1, 0);
         base.Init(board, positionX, positionY);
         _spriteRenderere = GetComponent<SpriteRenderer>();
         SetAnimalCellType();
         SetVisualType();
+        transform.DOMove(new Vector3(positionX, positionY, 0), _creationMovementTime);
     }
 
     private void SetAnimalCellType()
@@ -26,8 +36,8 @@ public class AnimalCell : Cell
         _posiblesAnimalsType = GetAllAnimalsType();
         do
         {
-           
-            _type = _posiblesAnimalsType[UnityEngine.Random.Range(0,_posiblesAnimalsType.Count)];
+
+            _type = _posiblesAnimalsType[UnityEngine.Random.Range(0, _posiblesAnimalsType.Count)];
         } while (CheckNeighborsMatch());
 
     }
@@ -102,9 +112,21 @@ public class AnimalCell : Cell
         {
             AnimalType myEnum = (AnimalType)Enum.Parse(typeof(AnimalType), i.ToString());
             if (myEnum != AnimalType.EMPTY)
-            result.Add(myEnum);
+                result.Add(myEnum);
         }
         return result;
+    }
+    public override void DestroyCell()
+    {
+        transform.localScale = Vector3.one * _maxScaleDestroyed;
+        transform.DOScale(Vector3.one * _maxScaleDestroyed, _maxScaleTime).onComplete = () =>
+            {
+                transform.DOScale(Vector3.zero, _timeToDetroy).onComplete = () =>
+                {
+
+                    base.DestroyCell();
+                };
+            };
     }
     public enum AnimalType
     {

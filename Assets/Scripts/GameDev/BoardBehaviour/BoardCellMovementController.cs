@@ -187,6 +187,8 @@ namespace GameDev.Behaviour2D.Puzzle.Board
                                 cellsCollpasedList.Add(new Vector2(positionX, j));
                                 break;
                             }
+                            else
+                                cellsCollapsedOriginalPosition.Add(new Vector2(positionX, k));
                         }
                     }
                 }
