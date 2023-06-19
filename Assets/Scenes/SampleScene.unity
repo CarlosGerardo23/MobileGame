@@ -560,6 +560,7 @@ MonoBehaviour:
   _boardController: {fileID: 139494220}
   _boardMovementController: {fileID: 139494222}
   _minNumMatches: 3
+  _comboTime: 0.15
   _getMatchesObserver: {fileID: 11400000, guid: 6d0569d9733d64345a59a9d34380aa64, type: 2}
   _onMatchNotFoundSubject:
     m_PersistentCalls:
