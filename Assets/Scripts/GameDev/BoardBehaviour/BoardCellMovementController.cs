@@ -9,9 +9,11 @@ namespace GameDev.Behaviour2D.Puzzle.Board
     {
         [SerializeField] private InputTouchControls _touchControls;
         [SerializeField] private bool _useOneTileRestriction;
+
         private BoardController _boardController;
         private Vector2 _startCellIndex;
         private Vector2 _endCellIndex;
+        private static bool _canMove;
         private void Awake()
         {
             _boardController = GetComponent<BoardController>();
@@ -23,14 +25,20 @@ namespace GameDev.Behaviour2D.Puzzle.Board
             _touchControls.OnEndedTouchPosition += TouchUp;
 
         }
+        private void Update()
+        {
+            print(_canMove);
+        }
         private void TouchDown(Vector2 position)
         {
+            if (!_canMove) return;
             if (position.x > Screen.width || position.y > Screen.height || position.x < 0 || position.y < 0 ||
             position.x == Mathf.Infinity || position.y == Mathf.Infinity || position.x == -Mathf.Infinity || position.y == -Mathf.Infinity) return;
             OnPointerDown(position);
         }
         private void TouchUp(Vector2 position)
         {
+            if (!_canMove) return;
             if (position.x > Screen.width || position.y > Screen.height || position.x < 0 || position.y < 0 ||
               position.x == Mathf.Infinity || position.y == Mathf.Infinity || position.x == -Mathf.Infinity || position.y == -Mathf.Infinity) return;
             GetLastCell(position);
@@ -38,15 +46,16 @@ namespace GameDev.Behaviour2D.Puzzle.Board
         }
         private void OnPointerDown(Vector2 position)
         {
+            if (!_canMove) return;
             _startCellIndex = new Vector2(-1, -1);
             Vector3 worlPosition = UnityEngine.Camera.main.ScreenToWorldPoint(new Vector3(position.x, position.y, 0));
             RaycastHit2D hit = Physics2D.Raycast(worlPosition, Vector2.zero);
             if (hit.collider != null)
             {
-              
+
                 if (hit.collider.gameObject.TryGetComponent(out Cell cell))
                 {
-                  
+
                     _startCellIndex = cell.CellPosition;
                 }
             }
@@ -59,10 +68,10 @@ namespace GameDev.Behaviour2D.Puzzle.Board
             RaycastHit2D hit = Physics2D.Raycast(worlPosition, Vector2.zero);
             if (hit.collider != null)
             {
-               
+
                 if (hit.collider.gameObject.TryGetComponent(out Cell cell))
                 {
-                   
+
                     _endCellIndex = cell.CellPosition;
                 }
             }
@@ -71,15 +80,24 @@ namespace GameDev.Behaviour2D.Puzzle.Board
         {
             if (_startCellIndex != new Vector2(-1, -1) && _endCellIndex != new Vector2(-1, -1))
             {
+                DisableControlls();
+
                 if (!_boardController.TryGetCellByPosition(_startCellIndex, out Cell startCell))
+                {
+                    EnableControlls();
                     return;
+                }
                 if (!_boardController.TryGetCellByPosition(_endCellIndex, out Cell endCell))
+                {
+                    EnableControlls();
                     return;
+                }
 
                 if (_useOneTileRestriction && !CheckPosibleMove(_startCellIndex, _endCellIndex))
                 {
                     _startCellIndex = new Vector2(-1, -1);
                     _endCellIndex = new Vector2(-1, -1);
+                    EnableControlls();
                     return;
                 }
                 _boardController.SwapCells(_startCellIndex, _endCellIndex);
@@ -90,6 +108,7 @@ namespace GameDev.Behaviour2D.Puzzle.Board
             }
             else
             {
+                EnableControlls();
                 _startCellIndex = new Vector2(-1, -1);
                 _endCellIndex = new Vector2(-1, -1);
             }
@@ -108,14 +127,21 @@ namespace GameDev.Behaviour2D.Puzzle.Board
             if (_startCellIndex != new Vector2(-1, -1) && _endCellIndex != new Vector2(-1, -1))
             {
                 if (!_boardController.TryGetCellByPosition(_startCellIndex, out Cell startCell))
+                {
+                    EnableControlls();
                     return;
+                }
                 if (!_boardController.TryGetCellByPosition(_endCellIndex, out Cell endCell))
+                {
+                    EnableControlls();
                     return;
+                }
 
                 if (_useOneTileRestriction && !CheckPosibleMove(_startCellIndex, _endCellIndex))
                 {
                     _startCellIndex = new Vector2(-1, -1);
                     _endCellIndex = new Vector2(-1, -1);
+                    EnableControlls();
                     return;
                 }
                 _boardController.SwapCells(_startCellIndex, _endCellIndex);
@@ -129,14 +155,18 @@ namespace GameDev.Behaviour2D.Puzzle.Board
                 _startCellIndex = new Vector2(-1, -1);
                 _endCellIndex = new Vector2(-1, -1);
             }
+            EnableControlls();
 
         }
-        public void CollapseBoard(List<Vector2> cellsToCollapse, out List<Vector2> cellsCollpasedList) 
+        public void CollapseBoard(List<Vector2> cellsToCollapse, out List<Vector2> cellsCollpasedList,
+            out List<Vector2> cellsOriginalPosition)
         {
             cellsCollpasedList = new List<Vector2>();
+            cellsOriginalPosition = new List<Vector2>();
+            List<Vector2> cellsCollapsedOriginalPosition = new List<Vector2>();
             int positionX;
             int positionY;
-          
+
             for (int i = 0; i < cellsToCollapse.Count; i++)
             {
                 positionX = (int)cellsToCollapse[i].x;
@@ -151,16 +181,34 @@ namespace GameDev.Behaviour2D.Puzzle.Board
                             if (_boardController.TryGetCellByPosition(new Vector2(positionX, k), out Cell cell))
                             {
                                 Debug.Log($"The cell {cell.CellPosition} is going to {new Vector2(positionX, j)}");
+                                cellsCollapsedOriginalPosition.Add(cell.CellPosition);
                                 _boardController.SwapCells(new Vector2(positionX, j), cell.CellPosition);
                                 cell.GetComponent<CellMovementController>().Move(positionX, j, false);
-                                cellsCollpasedList.Add(new Vector2(positionX,j));
+                                cellsCollpasedList.Add(new Vector2(positionX, j));
                                 break;
                             }
                         }
                     }
                 }
             }
+            for (int i = 0; i < cellsCollapsedOriginalPosition.Count; i++)
+            {
+                if (!_boardController.TryGetCellByPosition(cellsCollapsedOriginalPosition[i], out _))
+                {
+                    cellsOriginalPosition.Add(cellsCollapsedOriginalPosition[i]);
+                }
+            }
+        }
+        public static void EnableControlls()
+        {
+            _canMove = true;
+        }
+        public static void DisableControlls()
+        {
+            _canMove = false;
         }
     }
+
+
 }
 

@@ -19,7 +19,7 @@ namespace GameDev.Behaviour2D.Puzzle.Movement
         }
         public void Move(int destX, int destY, bool moveFinishEvent)
         {
-            print($"My position is {transform.localPosition}, my next position is {new Vector3(destX, destY, 0)}");
+           // print($"My position is {transform.localPosition}, my next position is {new Vector3(destX, destY, 0)}");
             _cell.UpdateCells(destX, destY);
             transform.DOMove(new Vector3(destX, destY, 0), _movementSpeed).SetEase(Ease.InOutCubic).onComplete =
                 () =>
@@ -30,7 +30,7 @@ namespace GameDev.Behaviour2D.Puzzle.Movement
         }
         public void Move(Vector3 position, bool moveFinishEvent)
         {
-            print($"My position is {transform.localPosition}, my next position is {position}");
+            //print($"My position is {transform.localPosition}, my next position is {position}");
             _cell.UpdateCells((int)position.x, (int)position.y);
             transform.DOMove(position, _movementSpeed).SetEase(Ease.InOutCubic).onComplete =
                 () =>

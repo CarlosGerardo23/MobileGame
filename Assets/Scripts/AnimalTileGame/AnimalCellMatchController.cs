@@ -20,6 +20,7 @@ public class AnimalCellMatchController : MonoBehaviour
 
     private List<Cell> _cellsToMatch = new List<Cell>();
     private AnimalCell _initialCell;
+    private List<Vector2> _cellstEliminatedList= new List<Vector2>();
 
     private void OnEnable()
     {
@@ -39,10 +40,13 @@ public class AnimalCellMatchController : MonoBehaviour
     }
     private void TryGetMatches()
     {
+        
         bool cellsToMatch = false;
         List<Vector2> resultCells = new List<Vector2>();
         List<Vector2> collapsedCells1 = new List<Vector2>();
         List<Vector2> collapsedCells2 = new List<Vector2>();
+        List<Vector2> cellsCollapsed = new List<Vector2>();
+        _cellstEliminatedList.Clear();
         if (GetMatchesByCell(_cellsToMatch[0].CellPosition, out resultCells))
         {
             cellsToMatch = true;
@@ -52,9 +56,10 @@ public class AnimalCellMatchController : MonoBehaviour
             }
 
             resultCells.Sort((a, b) => a.y.CompareTo(b.y));
-            _boardMovementController.CollapseBoard(GetUniquecolumns(resultCells), out collapsedCells1);
+            _boardMovementController.CollapseBoard(GetUniquecolumns(resultCells), out collapsedCells1, out cellsCollapsed);
 
         }
+        _cellstEliminatedList = _cellstEliminatedList.Union(cellsCollapsed).ToList();
         resultCells= new List<Vector2>();
         if (GetMatchesByCell(_cellsToMatch[1].CellPosition, out resultCells))
         {
@@ -65,8 +70,10 @@ public class AnimalCellMatchController : MonoBehaviour
             }
 
             resultCells.Sort((a, b) => a.y.CompareTo(b.y));
-            _boardMovementController.CollapseBoard(GetUniquecolumns(resultCells), out collapsedCells2);
+            _boardMovementController.CollapseBoard(GetUniquecolumns(resultCells), out collapsedCells2,out cellsCollapsed);
         }
+        _cellstEliminatedList = _cellstEliminatedList.Union(cellsCollapsed).ToList();
+
         if (!cellsToMatch) _onMatchNotFoundSubject?.Invoke();
         else
         {
@@ -80,6 +87,7 @@ public class AnimalCellMatchController : MonoBehaviour
     private IEnumerator ComboPices(List<Vector2> cellsPosition)
     {
         List<Vector2> cellsCombos = new List<Vector2>();
+        List<Vector2> cellsCollapsed = new List<Vector2>();
         yield return new WaitForSeconds(1);
         foreach (var cellPosition in cellsPosition)
         {
@@ -95,8 +103,15 @@ public class AnimalCellMatchController : MonoBehaviour
         if (cellsCombos.Count > 0)
         {
             cellsCombos.Sort((a, b) => a.y.CompareTo(b.y));
-            _boardMovementController.CollapseBoard(GetUniquecolumns(cellsCombos), out List<Vector2> newCellsToCollapse);
+            _boardMovementController.CollapseBoard(GetUniquecolumns(cellsCombos), out List<Vector2> newCellsToCollapse, out cellsCollapsed);
+            _cellstEliminatedList = _cellstEliminatedList.Union(cellsCollapsed).ToList();
+
             yield return ComboPices(newCellsToCollapse);
+        }
+        else
+        {
+            BoardCellMovementController.EnableControlls();
+            StartCoroutine(_boardController.SetUpCellsByPosition(_cellstEliminatedList));
         }
     }
 
@@ -108,6 +123,7 @@ public class AnimalCellMatchController : MonoBehaviour
         {
             CheckNeighbors(ref resultCells);
         }
+      
         return resultCells.Count >= _minNumMatches;
 
     }

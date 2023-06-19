@@ -9,28 +9,56 @@ namespace GameDev.Behaviour2D.Puzzle.Board
         [SerializeField] private int _gridWidth;
         [SerializeField] private int _gridHeight;
         [SerializeField] private Cell _cellPrefab;
+        [SerializeField] private bool _useDelay;
+        [SerializeField] private float _delayTime;
+        [SerializeField] private bool _useInputModifications;
         private Cell[,] _cellsArray;
         public Vector2 BoardDimension => new Vector2(_gridWidth, _gridHeight);
         public int BoardWidth => _gridWidth;
         public int BoardHeight => _gridHeight;
         private void Start()
         {
-            SetUpBoard();
+            StartCoroutine(SetUpBoard());
         }
-        private void SetUpBoard()
+
+        public IEnumerator SetUpCellsByPosition(List<Vector2> positions)
         {
+            if (_useInputModifications)
+                BoardCellMovementController.DisableControlls();
+            for (int i = 0; i < positions.Count; i++)
+            {
+                CreateCell((int)positions[i].x, (int)positions[i].y);
+                if (_useDelay)
+                    yield return new WaitForSeconds(_delayTime);
+            }
+            if (_useInputModifications)
+                BoardCellMovementController.EnableControlls();
+        }
+        private IEnumerator SetUpBoard()
+        {
+            if (_useInputModifications)
+                BoardCellMovementController.DisableControlls();
             _cellsArray = new Cell[_gridWidth, _gridHeight];
             for (int i = 0; i < _gridWidth; i++)
             {
                 for (int j = 0; j < _gridHeight; j++)
                 {
-                    Cell cell = Instantiate(_cellPrefab, new Vector3(i, j, 0), Quaternion.identity).GetComponent<Cell>();
-                    cell.transform.SetParent(transform);
-                    cell.name = $"Cell {i},{j}";
-                    cell?.Init(this, i, j);
-                    _cellsArray[i, j] = cell;
+                    CreateCell(i, j);
+                    if (_useDelay)
+                        yield return new WaitForSeconds(_delayTime);
                 }
             }
+            if (_useInputModifications)
+                BoardCellMovementController.EnableControlls();
+        }
+
+        private void CreateCell(int width, int height)
+        {
+            Cell cell = Instantiate(_cellPrefab, new Vector3(width, height, 0), Quaternion.identity).GetComponent<Cell>();
+            cell.transform.SetParent(transform);
+            cell.name = $"Cell {width},{height}";
+            cell?.Init(this, width, height);
+            _cellsArray[width, height] = cell;
         }
         public void SwapCells(Vector2 firstIndex, Vector2 secondIndex)
         {
