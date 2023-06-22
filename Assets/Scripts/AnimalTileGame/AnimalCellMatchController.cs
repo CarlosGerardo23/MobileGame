@@ -8,6 +8,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
+
 public class AnimalCellMatchController : MonoBehaviour
 {
     [SerializeField] BoardController _boardController;
@@ -17,7 +18,9 @@ public class AnimalCellMatchController : MonoBehaviour
     [Header("Events Observers")]
     [SerializeField] private CellEventChannel _getMatchesObserver;
     [Header("Events")]
+    [SerializeField] private AnimalMatchPlayerData _updatesPlayerPoints;
     [SerializeField] private UnityEvent _onMatchNotFoundSubject;
+    [SerializeField] private UnityEvent _onMatchFoundSubject;
 
     private List<Cell> _cellsToMatch = new List<Cell>();
     private AnimalCell _initialCell;
@@ -55,10 +58,10 @@ public class AnimalCellMatchController : MonoBehaviour
             {
                 _boardController.DestroyCellByPosition(resultCells[i]);
             }
-
+            _updatesPlayerPoints?.UpdatePoints(resultCells.Count);
             resultCells.Sort((a, b) => a.y.CompareTo(b.y));
             _boardMovementController.CollapseBoard(GetUniquecolumns(resultCells), out collapsedCells1, out cellsCollapsed);
-
+            _onMatchFoundSubject?.Invoke();
         }
         _cellstEliminatedList = _cellstEliminatedList.Union(cellsCollapsed).ToList();
         resultCells= new List<Vector2>();
@@ -69,9 +72,11 @@ public class AnimalCellMatchController : MonoBehaviour
             {
                 _boardController.DestroyCellByPosition(resultCells[i]);
             }
-
+            _updatesPlayerPoints?.UpdatePoints(resultCells.Count);
             resultCells.Sort((a, b) => a.y.CompareTo(b.y));
             _boardMovementController.CollapseBoard(GetUniquecolumns(resultCells), out collapsedCells2,out cellsCollapsed);
+            _onMatchFoundSubject?.Invoke();
+
         }
         _cellstEliminatedList = _cellstEliminatedList.Union(cellsCollapsed).ToList();
 
@@ -99,6 +104,9 @@ public class AnimalCellMatchController : MonoBehaviour
                 {
                     _boardController.DestroyCellByPosition(cellsMatches[i]);
                 }
+                _updatesPlayerPoints?.UpdatePoints(cellsMatches.Count);
+                _onMatchFoundSubject?.Invoke();
+
             }
         }
         if (cellsCombos.Count > 0)
@@ -124,7 +132,8 @@ public class AnimalCellMatchController : MonoBehaviour
         {
             CheckNeighbors(ref resultCells);
         }
-      
+        _onMatchFoundSubject?.Invoke();
+
         return resultCells.Count >= _minNumMatches;
 
     }

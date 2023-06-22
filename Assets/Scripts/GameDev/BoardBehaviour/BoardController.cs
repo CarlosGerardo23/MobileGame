@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using UnityEngine.Events;
 using UnityEngine;
 namespace GameDev.Behaviour2D.Puzzle.Board
 {
@@ -12,6 +13,7 @@ namespace GameDev.Behaviour2D.Puzzle.Board
         [SerializeField] private bool _useDelay;
         [SerializeField] private float _delayTime;
         [SerializeField] private bool _useInputModifications;
+        [SerializeField] private UnityEvent _onBoardFinish;
         private Cell[,] _cellsArray;
         public Vector2 BoardDimension => new Vector2(_gridWidth, _gridHeight);
         public int BoardWidth => _gridWidth;
@@ -50,6 +52,7 @@ namespace GameDev.Behaviour2D.Puzzle.Board
             }
             if (_useInputModifications)
                 BoardCellMovementController.EnableControlls();
+            _onBoardFinish?.Invoke();
         }
 
         private void CreateCell(int width, int height)

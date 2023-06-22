@@ -17,6 +17,8 @@ public class AnimalCell : Cell
     [SerializeField] private float _maxScaleDestroyed;
     [SerializeField] private float _maxScaleTime;
     [SerializeField] private float _timeToDetroy;
+    [SerializeField] private bool _useAllPosibleCells;
+    [SerializeField] private int _numberOfCells;
 
     private SpriteRenderer _spriteRenderere;
     List<AnimalType> _posiblesAnimalsType = new List<AnimalType>();
@@ -108,6 +110,7 @@ public class AnimalCell : Cell
         List<AnimalType> result = new List<AnimalType>();
         AnimalType lastType = AnimalType.SNAKE;
         int lastIndex = Convert.ToInt32(lastType);
+        lastIndex = _useAllPosibleCells ? lastIndex : (_numberOfCells <= lastIndex ? _numberOfCells : lastIndex);
         for (int i = 0; i < lastIndex; i++)
         {
             AnimalType myEnum = (AnimalType)Enum.Parse(typeof(AnimalType), i.ToString());

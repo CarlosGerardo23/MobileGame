@@ -15,6 +15,14 @@ namespace GameDev.Behaviour2D.Controls
             _inputTouchControls.Disable();
 
         }
+
+        public void SetInputsState(bool state)
+        {
+            if (state)
+                _inputTouchControls.Enable();
+            else
+                _inputTouchControls.Disable();
+        }
     }
 }
 

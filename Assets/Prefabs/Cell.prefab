@@ -127,6 +127,8 @@ MonoBehaviour:
   _maxScaleDestroyed: 2
   _maxScaleTime: 0.05
   _timeToDetroy: 0.08
+  _useAllPosibleCells: 0
+  _numberOfCells: 7
 --- !u!114 &1885619779064711265
 MonoBehaviour:
   m_ObjectHideFlags: 0
