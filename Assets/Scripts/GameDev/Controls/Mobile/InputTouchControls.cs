@@ -24,10 +24,10 @@ namespace GameDev.Behaviour2D.Controls
         }
         public void Disable()
         {
-            EnhancedTouch.TouchSimulation.Disable();
-            EnhancedTouch.EnhancedTouchSupport.Disable();
             EnhancedTouch.Touch.onFingerDown -= OnFingerDown;
             EnhancedTouch.Touch.onFingerUp -= OnFingerUp;
+            EnhancedTouch.TouchSimulation.Disable();
+            EnhancedTouch.EnhancedTouchSupport.Disable();
         }
         private void OnFingerUp(Finger finger)
         {
