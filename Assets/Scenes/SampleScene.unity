@@ -621,7 +621,31 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 346306095}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 137852649}
+        m_TargetAssemblyTypeName: GameDev.UI.UIElementController, Assembly-CSharp
+        m_MethodName: HideElement
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 130110695}
+          m_ObjectArgumentAssemblyTypeName: Gaem.UI.UIElement, Assembly-CSharp
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 379716199}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: ResetGame
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &346306095
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -753,6 +777,21 @@ MonoBehaviour:
   _data: {fileID: 11400000, guid: 9173956bd0932459e8290ea60b51f8df, type: 2}
   _timer: {fileID: 361771027}
   _inputs: {fileID: 2020001757}
+  _onGameOver:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 137852649}
+        m_TargetAssemblyTypeName: GameDev.UI.UIElementController, Assembly-CSharp
+        m_MethodName: ShowUniqueElement
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 130110695}
+          m_ObjectArgumentAssemblyTypeName: Gaem.UI.UIElement, Assembly-CSharp
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!4 &379716200
 Transform:
   m_ObjectHideFlags: 0
@@ -782,7 +821,7 @@ GameObject:
   - component: {fileID: 415191140}
   - component: {fileID: 415191139}
   m_Layer: 5
-  m_Name: PlayAgain_button (1)
+  m_Name: Exit_button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -852,7 +891,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 415191140}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 379716199}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: Exit
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &415191140
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1945,6 +1996,8 @@ GameObject:
   - component: {fileID: 1403325756}
   - component: {fileID: 1403325758}
   - component: {fileID: 1403325757}
+  - component: {fileID: 1403325759}
+  - component: {fileID: 1403325760}
   m_Layer: 5
   m_Name: Points_txt
   m_TagString: Untagged
@@ -2069,6 +2122,36 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1403325755}
   m_CullTransparentMesh: 1
+--- !u!114 &1403325759
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1403325755}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: abf2858fc89f740268276a5696001d34, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _updateNumberObserver: {fileID: 11400000, guid: 9d99f5ac714bd436e95ac1997653073a, type: 2}
+  _addFactor: 1
+  _useDealy: 0
+  _timeToDelay: 0
+--- !u!114 &1403325760
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1403325755}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd72fe8a74566454eaf557a528e804c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _text: {fileID: 1403325757}
+  _data: {fileID: 11400000, guid: 9173956bd0932459e8290ea60b51f8df, type: 2}
 --- !u!1 &1535793579
 GameObject:
   m_ObjectHideFlags: 0
