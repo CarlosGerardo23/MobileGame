@@ -1,10 +1,15 @@
 using System.Collections.Generic;
 namespace GameDev.DesignPatterns
 {
-
+    [System.Serializable]
     public abstract class ObjectPooling<T>
     {
         private List<T> _objects;
+
+        protected void Init()
+        {
+            _objects = new List<T>();
+        }
         public T Request()
         {
             if (_objects.Count > 0)

@@ -1,49 +1,132 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace GameDev.Audio
 {
     [RequireComponent(typeof(AudioSource))]
     public class SoundEmitter : MonoBehaviour
     {
-        public Action<SoundEmitter> onStopSound;
         private AudioSource _audioSource;
-        private int _key;
 
-        public int Key => _key;
-        private void OnEnable()
+        public event UnityAction<SoundEmitter> OnSoundFinishedPlaying;
+
+        private void Awake()
         {
-            
-        }
-        private void OnDisable()
-        {
-            
-        }
-        public void Play(AudioData data, Vector3 position)
-        {
-            transform.position = position;
+            _audioSource = this.GetComponent<AudioSource>();
             _audioSource.playOnAwake = false;
-            _audioSource.clip = data.Clip;
-            _audioSource.volume = data.Volume;
-            _audioSource.spatialBlend = data.SpatialBlend;
-            _audioSource.loop = data.HasToLoop;
+        }
+
+        /// <summary>
+        /// Instructs the AudioSource to play a single clip, with optional looping, in a position in 3D space.
+        /// </summary>
+        /// <param name="clip"></param>
+        /// <param name="settings"></param>
+        /// <param name="hasToLoop"></param>
+        /// <param name="position"></param>
+        public void PlayAudioClip(AudioClip clip, AudioConfigurationSO settings, bool hasToLoop, Vector3 position = default)
+        {
+            _audioSource.clip = clip;
+            settings.ApplyTo(_audioSource);
+            _audioSource.transform.position = position;
+            _audioSource.loop = hasToLoop;
+            _audioSource.time = 0f; //Reset in case this AudioSource is being reused for a short SFX after being used for a long music track
             _audioSource.Play();
 
-            if(!data.HasToLoop)
+            if (!hasToLoop)
             {
-                StartCoroutine(OnFinishSound(_audioSource.clip.length));
+                StartCoroutine(FinishedPlaying(clip.length));
             }
         }
+
+        public void FadeMusicIn(AudioClip musicClip, AudioConfigurationSO settings, float duration, float startTime = 0f)
+        {
+            PlayAudioClip(musicClip, settings, true);
+            _audioSource.volume = 0f;
+
+            //Start the clip at the same time the previous one left, if length allows
+            //TODO: find a better way to sync fading songs
+            if (startTime <= _audioSource.clip.length)
+                _audioSource.time = startTime;
+
+            _audioSource.DOFade(settings.Volume, duration);
+        }
+
+        public float FadeMusicOut(float duration)
+        {
+            _audioSource.DOFade(0f, duration).onComplete += OnFadeOutComplete;
+
+            return _audioSource.time;
+        }
+
+        private void OnFadeOutComplete()
+        {
+            NotifyBeingDone();
+        }
+
+        /// <summary>
+        /// Used to check which music track is being played.
+        /// </summary>
+        public AudioClip GetClip()
+        {
+            return _audioSource.clip;
+        }
+
+
+        /// <summary>
+        /// Used when the game is unpaused, to pick up SFX from where they left.
+        /// </summary>
+        public void Resume()
+        {
+            _audioSource.Play();
+        }
+
+        /// <summary>
+        /// Used when the game is paused.
+        /// </summary>
+        public void Pause()
+        {
+            _audioSource.Pause();
+        }
+
         public void Stop()
         {
-            
+            _audioSource.Stop();
         }
-        private IEnumerator OnFinishSound(float musicDuration)
+
+        public void Finish()
         {
-            yield return new WaitForSeconds(musicDuration);
-            onStopSound(this);
+            if (_audioSource.loop)
+            {
+                _audioSource.loop = false;
+                float timeRemaining = _audioSource.clip.length - _audioSource.time;
+                StartCoroutine(FinishedPlaying(timeRemaining));
+            }
+        }
+
+        public bool IsPlaying()
+        {
+            return _audioSource.isPlaying;
+        }
+
+        public bool IsLooping()
+        {
+            return _audioSource.loop;
+        }
+
+        IEnumerator FinishedPlaying(float clipLength)
+        {
+            yield return new WaitForSeconds(clipLength);
+
+            NotifyBeingDone();
+        }
+
+        private void NotifyBeingDone()
+        {
+            OnSoundFinishedPlaying.Invoke(this); // The AudioManager will pick this up
         }
     }
 }

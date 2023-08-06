@@ -8,7 +8,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
-
+using GameDev.Audio;
 public class AnimalCellMatchController : MonoBehaviour
 {
     [SerializeField] BoardController _boardController;
@@ -21,7 +21,10 @@ public class AnimalCellMatchController : MonoBehaviour
     [SerializeField] private AnimalMatchPlayerData _updatesPlayerPoints;
     [SerializeField] private UnityEvent _onMatchNotFoundSubject;
     [SerializeField] private UnityEvent _onMatchFoundSubject;
-
+    [Header("Sounds Event")]
+    [SerializeField] private AudioCue _movement;
+    [SerializeField] private AudioCue _fails;
+    [SerializeField] private AudioCue _succes;
     private List<Cell> _cellsToMatch = new List<Cell>();
     private AnimalCell _initialCell;
     private List<Vector2> _cellstEliminatedList= new List<Vector2>();
@@ -44,7 +47,8 @@ public class AnimalCellMatchController : MonoBehaviour
     }
     private void TryGetMatches()
     {
-        
+        Vector3 initialCellPosition = _cellsToMatch[0].transform.position;
+        _movement.Play(initialCellPosition);
         bool cellsToMatch = false;
         List<Vector2> resultCells = new List<Vector2>();
         List<Vector2> collapsedCells1 = new List<Vector2>();
@@ -80,9 +84,14 @@ public class AnimalCellMatchController : MonoBehaviour
         }
         _cellstEliminatedList = _cellstEliminatedList.Union(cellsCollapsed).ToList();
 
-        if (!cellsToMatch) _onMatchNotFoundSubject?.Invoke();
+        if (!cellsToMatch)
+        {
+            _onMatchNotFoundSubject?.Invoke();
+            _fails.Play(initialCellPosition);
+        }
         else
         {
+            _succes.Play(initialCellPosition);
             collapsedCells1 = collapsedCells1.Union(collapsedCells2).ToList();
             StartCoroutine(ComboPices(collapsedCells1));
         }
@@ -106,7 +115,7 @@ public class AnimalCellMatchController : MonoBehaviour
                 }
                 _updatesPlayerPoints?.UpdatePoints(cellsMatches.Count);
                 _onMatchFoundSubject?.Invoke();
-
+                _succes.Play(cellPosition);
             }
         }
         if (cellsCombos.Count > 0)
@@ -132,8 +141,6 @@ public class AnimalCellMatchController : MonoBehaviour
         {
             CheckNeighbors(ref resultCells);
         }
-        _onMatchFoundSubject?.Invoke();
-
         return resultCells.Count >= _minNumMatches;
 
     }
