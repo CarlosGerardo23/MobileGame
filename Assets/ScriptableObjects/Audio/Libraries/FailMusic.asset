@@ -13,4 +13,7 @@ MonoBehaviour:
   m_Name: FailMusic
   m_EditorClassIdentifier: 
   looping: 0
-  _audioClipGroups: []
+  _audioClipGroups:
+  - _sequenceMode: 0
+    _audioClips:
+    - {fileID: 8300000, guid: b493f258f64937344a19ccc30626bcef, type: 3}

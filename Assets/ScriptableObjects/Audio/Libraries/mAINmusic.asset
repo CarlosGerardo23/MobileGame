@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5a41f959b19a485bbbf7a407580f933, type: 3}
   m_Name: mAINmusic
   m_EditorClassIdentifier: 
-  looping: 0
+  looping: 1
   _audioClipGroups:
   - _sequenceMode: 0
     _audioClips:

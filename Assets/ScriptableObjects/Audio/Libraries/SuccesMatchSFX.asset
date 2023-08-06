@@ -13,4 +13,7 @@ MonoBehaviour:
   m_Name: SuccesMatchSFX
   m_EditorClassIdentifier: 
   looping: 0
-  _audioClipGroups: []
+  _audioClipGroups:
+  - _sequenceMode: 0
+    _audioClips:
+    - {fileID: 8300000, guid: 3e540e61576b427468818c89ac732977, type: 3}

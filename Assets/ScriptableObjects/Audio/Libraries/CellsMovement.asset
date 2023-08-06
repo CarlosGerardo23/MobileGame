@@ -13,4 +13,7 @@ MonoBehaviour:
   m_Name: CellsMovement
   m_EditorClassIdentifier: 
   looping: 0
-  _audioClipGroups: []
+  _audioClipGroups:
+  - _sequenceMode: 0
+    _audioClips:
+    - {fileID: 8300000, guid: d5e80647aa3a7c8429d7c1b3605f3d87, type: 3}
