@@ -13,7 +13,7 @@ namespace GameDev.Audio
         #region Properties
         public SequenceMode CurrentSequenceMode { get => _sequenceMode; set => _sequenceMode = value; }
         #endregion
-        #region Private-Variablrs
+        #region Private-Variables
         private int _nextClipToPlay = -1;
         private int _lastClipPlayed = -1;
         #endregion
